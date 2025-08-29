@@ -1,6 +1,7 @@
 import serial
 import csv
 from config import SERIAL_PORT, BAUDRATE, RAW_CSV
+from file_manager import generate_unique_id  
 
 def serial_listener():
     ser = serial.Serial(
@@ -59,9 +60,13 @@ def serial_listener():
                         weight = parts[13]; density = parts[14]; curing = parts[15]
                         pace = parts[16]; max_load = parts[17]; max_res = parts[18]
 
+                # Generamos un unique_id para cada registro
+                unique_id = generate_unique_id()
+
                 with open(RAW_CSV, "a", newline="", encoding="utf-8") as f:
                     writer = csv.writer(f)
                     writer.writerow([
+                        unique_id,  # primera columna
                         fmt, test_id, date, time_, temp,
                         length, width, diam, height, area,
                         weight, density, curing,

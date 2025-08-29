@@ -3,7 +3,7 @@ import tkinter as tk
 from config import USE_SIMULATOR
 from simulator import simulator_thread
 from serial_reader import serial_listener
-from gui import ResultsApp
+from gui.main_window import ResultsApp
 from file_manager import init_csvs
 
 if __name__ == "__main__":
