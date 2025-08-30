@@ -18,8 +18,10 @@ def open_edit_popup(parent, unique_id, meta, refresh_callback):
     desc_entry.insert(0, meta.get(unique_id, {}).get("Description",""))
 
     def save_and_close():
-        meta[unique_id] = {"unique_id": unique_id,
-                           "test_id": meta[unique_id].get("test_id",""),
+        if unique_id not in meta:
+            meta[unique_id] = {}
+
+        meta[unique_id] = {"test_id": meta[unique_id].get("test_id",""),
                            "Name": name_entry.get(),
                            "Description": desc_entry.get()}
         save_meta(meta)

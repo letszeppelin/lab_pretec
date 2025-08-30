@@ -1,8 +1,10 @@
 import tkinter as tk
+from tkinter import messagebox
 from file_manager import load_meta, load_raw
 from config import DISPLAY_LAST
 from gui.treeview_widget import create_treeview
 from gui.edit_popup import open_edit_popup
+import serial_reader  
 
 COLUMNS = ["ID","Fecha","Hora","Carga (kN)","Resistencia (MPa)","Nombre","Descripcion"]
 
@@ -13,16 +15,25 @@ class ResultsApp:
         self.meta = load_meta()
         self.raw_data = load_raw()
         self.last_tests = self.raw_data[-DISPLAY_LAST:]
+        #crear otros widgets
         self.create_widgets()
         self.populate_treeview()
         self.auto_refresh()
+        self.update_serial_status()  # arranca actualización del label
 
     def create_widgets(self):
+        # Frame principal
         frame = tk.Frame(self.root)
         frame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
+        # Label para mostrar estado del puerto serial
+        self.status_label = tk.Label(self.root, text="Estado: Desconocido", fg="blue", anchor="w")
+        self.status_label.pack(fill=tk.X, padx=10, pady=(0, 5))
+
+        # Treeview
         self.tree = create_treeview(frame, COLUMNS)
 
+        # Botón editar
         self.edit_btn = tk.Button(self.root, text="Editar Seleccionado", command=self.edit_selected)
         self.edit_btn.pack(pady=5)
 
@@ -39,7 +50,6 @@ class ResultsApp:
             unique_id = row.get("unique_id")
             meta_row = self.meta.get(unique_id, {})
             values = [
-                #unique_id,
                 row.get("test_id",""),
                 row.get("date",""),
                 row.get("time",""),
@@ -64,7 +74,7 @@ class ResultsApp:
     def edit_selected(self):
         selected = self.tree.selection()
         if not selected:
-            tk.messagebox.showwarning("Sin Selección", "Seleccione un test para editar")
+            messagebox.showwarning("Sin Selección", "Seleccione un test para editar")
             return
         unique_id = selected[0]
         open_edit_popup(self.root, unique_id, self.meta, self.populate_treeview)
@@ -74,3 +84,20 @@ class ResultsApp:
         self.last_tests = self.raw_data[-DISPLAY_LAST:]
         self.populate_treeview()
         self.root.after(5000, self.auto_refresh)
+
+    def update_serial_status(self):
+        # Refresca el label según estado global
+        self.status_label.config(text=f"Estado: {serial_reader.serial_status}")
+
+        # Color dinámico según estado
+        if "Escuchando" in serial_reader.serial_status:
+            self.status_label.config(fg="blue")
+        elif "Recibiendo" in serial_reader.serial_status:
+            self.status_label.config(fg="green")
+        elif "Error" in serial_reader.serial_status or "No conectado" in serial_reader.serial_status:
+            self.status_label.config(fg="red")
+        else:
+            self.status_label.config(fg="black")
+
+        # Repite cada 2s
+        self.root.after(2000, self.update_serial_status)
