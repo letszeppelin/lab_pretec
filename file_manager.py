@@ -66,7 +66,7 @@ def save_meta(meta):
     if not meta:
         return
     with open(META_CSV, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=["unique_id", "test_id", "Name", "Description"])
+        writer = csv.DictWriter(f, fieldnames=["unique_id", "test_id", "Name", "Description","Moldeo","fck"])
         writer.writeheader()
         for row in meta.values():
             writer.writerow(row)

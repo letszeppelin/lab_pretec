@@ -6,7 +6,7 @@ from gui.treeview_widget import create_treeview
 from gui.edit_popup import open_edit_popup
 import serial_reader  
 
-COLUMNS = ["ID","Fecha","Hora","Carga (kN)","Resistencia (MPa)","Nombre","Descripcion"]
+COLUMNS = ["ID","Fecha","Hora","Carga (kN)","Resistencia (MPa)","Nombre","Descripcion","Fecha de Moldeo","fck"]
 
 class ResultsApp:
     def __init__(self, root):
@@ -56,7 +56,9 @@ class ResultsApp:
                 row.get("max_load",""),
                 row.get("max_resistance",""),
                 meta_row.get("Name",""),
-                meta_row.get("Description","")
+                meta_row.get("Description",""),
+                meta_row.get("Moldeo",""),
+                meta_row.get("fck","")
             ]
             self.tree.insert("", tk.END, iid=unique_id, values=values)
 
