@@ -1,3 +1,4 @@
+#Quiero migrar a PySide6 luego
 import tkinter as tk
 from tkinter import messagebox
 from file_manager import load_meta, load_raw
