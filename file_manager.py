@@ -68,5 +68,14 @@ def save_meta(meta):
     with open(META_CSV, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=["unique_id", "test_id", "Name", "Description","Moldeo","fck"])
         writer.writeheader()
-        for row in meta.values():
-            writer.writerow(row)
+        for unique_id, row in meta.items():  # <-- iterate both key and value
+            # Ensure test_id exists
+            test_id = row.get("test_id", "")
+            writer.writerow({
+                "unique_id": unique_id,
+                "test_id": test_id,
+                "Name": row.get("Name",""),
+                "Description": row.get("Description",""),
+                "Moldeo": row.get("Moldeo",""),
+                "fck": row.get("fck","")
+            })
