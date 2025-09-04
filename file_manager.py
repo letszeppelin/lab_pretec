@@ -4,13 +4,11 @@ import uuid
 from datetime import datetime
 from config import RAW_CSV, META_CSV
 
-
 def generate_unique_id():
     """Genera un ID único usando timestamp + sufijo aleatorio."""
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     rand_suffix = uuid.uuid4().hex[:6]
     return f"{timestamp}_{rand_suffix}"
-
 
 def init_csvs():
     """Crea archivos CSV si no existen aún, con columna unique_id."""
@@ -68,8 +66,8 @@ def save_meta(meta):
     with open(META_CSV, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=["unique_id", "test_id", "Name", "Description","Moldeo","fck"])
         writer.writeheader()
-        for unique_id, row in meta.items():  # <-- iterate both key and value
-            # Ensure test_id exists
+        for unique_id, row in meta.items():  # <-- Iterar los dos: key y value
+            # Se asegura que test_id existe
             test_id = row.get("test_id", "")
             writer.writerow({
                 "unique_id": unique_id,

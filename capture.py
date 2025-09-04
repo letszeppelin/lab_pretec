@@ -5,7 +5,7 @@ import config
 from datetime import datetime
 
 # --- Carpeta donde se guardarán los archivos ---
-OUTPUT_DIR = "ensayos"
+OUTPUT_DIR = "data"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # --- Variables de control ---
@@ -48,7 +48,7 @@ try:
 
             normalized_title = line.replace("(", "").replace(")", "").replace(" ", "_")
             timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            filename = f"{normalized_title}_{timestamp}.csv"
+            filename = f"Historial_{normalized_title}_{timestamp}.csv"
             filepath = os.path.join(OUTPUT_DIR, filename)
 
             current_file = open(filepath, "w", newline="", encoding="utf-8")
