@@ -1,8 +1,14 @@
-import csv
 import os
 import uuid
+import sqlite3
 from datetime import datetime
-from config import RAW_CSV, META_CSV
+from config import DATA_DIR  
+
+DB_PATH = os.path.join(DATA_DIR, "resultados.db")
+
+def get_connection():
+    """Devuelve una conexión a la base de datos SQLite."""
+    return sqlite3.connect(DB_PATH)
 
 def generate_unique_id():
     """Genera un ID único usando timestamp + sufijo aleatorio."""
@@ -10,70 +16,117 @@ def generate_unique_id():
     rand_suffix = uuid.uuid4().hex[:6]
     return f"{timestamp}_{rand_suffix}"
 
-def init_csvs():
-    """Crea archivos CSV si no existen aún, con columna unique_id."""
-    if not os.path.exists(RAW_CSV):
-        with open(RAW_CSV, "w", newline="", encoding="utf-8") as f:
-            writer = csv.writer(f)
-            writer.writerow([
-                "unique_id", "format", "test_id", "date", "time", "temperature",
-                "length", "width", "diameter", "height", "area",
-                "weight", "density", "curing_days",
-                "pace_rate", "max_load", "max_resistance"
-            ])
+# Inicialización DB
+def init_db():
+    """Crea la base de datos y tablas si no existen."""
+    os.makedirs(DATA_DIR, exist_ok=True)
+    conn = get_connection()
+    c = conn.cursor()
 
-    if not os.path.exists(META_CSV):
-        with open(META_CSV, "w", newline="", encoding="utf-8") as f:
-            writer = csv.writer(f)
-            writer.writerow(["unique_id", "test_id", "Name", "Description"])
+    # Tabla de resultados RAW
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS raw_results (
+        unique_id TEXT PRIMARY KEY,
+        format TEXT,
+        test_id TEXT,
+        date TEXT,
+        time TEXT,
+        temperature REAL,
+        length REAL,
+        width REAL,
+        diameter REAL,
+        height REAL,
+        area REAL,
+        weight REAL,
+        density REAL,
+        curing_days INTEGER,
+        pace_rate REAL,
+        max_load REAL,
+        max_resistance REAL
+    )
+    """)
 
+    # Tabla de meta
+    c.execute("""
+    CREATE TABLE IF NOT EXISTS meta_results (
+        unique_id TEXT PRIMARY KEY,
+        test_id TEXT,
+        Name TEXT,
+        Description TEXT,
+        Moldeo TEXT,
+        fck REAL
+    )
+    """)
 
-def load_raw():
-    """Carga datos de RAW_CSV."""
-    data = []
-    try:
-        with open(RAW_CSV, newline='', encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                if not row.get('test_id', '').strip():
-                    continue
-                data.append(row)
-    except FileNotFoundError:
-        pass
-    return data
+    conn.commit()
+    conn.close()
 
+# Cargar datos
+def load_raw(limit=100):
+    """Carga los últimos 'limit' registros de raw_results."""
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    c.execute("""
+        SELECT *
+        FROM raw_results
+        ORDER BY date DESC, time DESC
+        LIMIT ?
+    """, (limit,))
+    rows = [dict(row) for row in c.fetchall()]
+    conn.close()
+    return rows
 
 def load_meta():
-    """Carga datos de META_CSV como diccionario indexed by unique_id."""
-    meta = {}
-    try:
-        with open(META_CSV, newline='', encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                unique_id = row.get("unique_id", "").strip()
-                if not unique_id:
-                    continue
-                meta[unique_id] = row
-    except FileNotFoundError:
-        pass
-    return meta
+    """Carga META como diccionario indexed by unique_id."""
+    conn = get_connection()
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    c.execute("SELECT * FROM meta_results")
+    rows = {row["unique_id"]: dict(row) for row in c.fetchall()}
+    conn.close()
+    return rows
 
-
+# Guardar datos
 def save_meta(meta):
-    """Guarda el diccionario meta (key = unique_id)."""
+    """Guarda un diccionario meta (key = unique_id) en SQLite."""
     if not meta:
         return
-    with open(META_CSV, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=["unique_id", "test_id", "Name", "Description","Moldeo","fck"])
-        writer.writeheader()
-        for unique_id, row in meta.items():  # <-- Iterar los dos: key y value
-            # Se asegura que test_id existe
-            test_id = row.get("test_id", "")
-            writer.writerow({
-                "unique_id": unique_id,
-                "test_id": test_id,
-                "Name": row.get("Name",""),
-                "Description": row.get("Description",""),
-                "Moldeo": row.get("Moldeo",""),
-                "fck": row.get("fck","")
-            })
+    conn = get_connection()
+    c = conn.cursor()
+    for unique_id, row in meta.items():
+        test_id = row.get("test_id", "")
+        c.execute("""
+        INSERT OR REPLACE INTO meta_results
+        (unique_id, test_id, Name, Description, Moldeo, fck)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """, (
+            unique_id,
+            test_id,
+            row.get("Name", ""),
+            row.get("Description", ""),
+            row.get("Moldeo", ""),
+            row.get("fck", None)
+        ))
+    conn.commit()
+    conn.close()
+
+def save_raw(row):
+    """Guarda un registro RAW en SQLite."""
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute("""
+    INSERT INTO raw_results (
+        unique_id, format, test_id, date, time, temperature,
+        length, width, diameter, height, area,
+        weight, density, curing_days,
+        pace_rate, max_load, max_resistance
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        row["unique_id"], row["format"], row["test_id"], row["date"], row["time"], row["temperature"],
+        row["length"], row["width"], row["diameter"], row["height"], row["area"],
+        row["weight"], row["density"], row["curing_days"],
+        row["pace_rate"], row["max_load"], row["max_resistance"]
+    ))
+    conn.commit()
+    conn.close()

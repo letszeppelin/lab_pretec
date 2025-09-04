@@ -4,11 +4,11 @@ from config import USE_SIMULATOR
 from simulator import simulator_thread
 from serial_reader import serial_listener
 from gui.main_window import ResultsApp
-from file_manager import init_csvs
+from file_manager import init_db
 #from gui.styles import setup_styles  # centralized styles
 
 if __name__ == "__main__":
-    init_csvs()
+    init_db()
 
     if USE_SIMULATOR:
         t = threading.Thread(target=simulator_thread, daemon=True)

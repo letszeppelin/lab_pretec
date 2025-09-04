@@ -1,9 +1,8 @@
 import serial
-import csv
 import time
 import threading
 from config import SERIAL_PORT, BAUDRATE, RAW_CSV
-from file_manager import generate_unique_id  
+from file_manager import generate_unique_id, save_raw
 
 serial_status = "Desconectado"
 _last_data_time = None   # para controlar silencio en el puerto
@@ -91,16 +90,26 @@ def serial_listener():
                     # Generamos un unique_id para cada registro
                     unique_id = generate_unique_id()
 
-                    with open(RAW_CSV, "a", newline="", encoding="utf-8") as f:
-                        writer = csv.writer(f)
-                        writer.writerow([
-                            unique_id,  # primera columna
-                            fmt, test_id, date, time_, temp,
-                            length, width, diam, height, area,
-                            weight, density, curing,
-                            pace, max_load, max_res
-                        ])
-
+                    row = {
+                        "unique_id": unique_id,
+                        "format": fmt,
+                        "test_id": test_id,
+                        "date": date,
+                        "time": time_,
+                        "temperature": temp,
+                        "length": length,
+                        "width": width,
+                        "diameter": diam,
+                        "height": height,
+                        "area": area,
+                        "weight": weight,
+                        "density": density,
+                        "curing_days": curing,
+                        "pace_rate": pace,
+                        "max_load": max_load,
+                        "max_resistance": max_res
+                    }
+                    save_raw(row)
                     print(f"Resultado: {test_id} | Max Load={max_load} | Max Res={max_res}")
 
             except (IndexError, ValueError) as e:

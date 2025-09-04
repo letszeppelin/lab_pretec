@@ -1,6 +1,5 @@
 import ttkbootstrap as tb
 from ttkbootstrap.constants import *
-from tkinter import messagebox
 from file_manager import load_meta, load_raw
 from config import DISPLAY_LAST
 from gui.treeview_widget import create_treeview
@@ -15,8 +14,7 @@ class ResultsApp:
         self.root = root
         self.root.title("Resultados Máquina de Compresión")
         self.meta = load_meta()
-        self.raw_data = load_raw()
-        self.last_tests = self.raw_data[-DISPLAY_LAST:]
+        self.raw_data = load_raw(DISPLAY_LAST)   # 🚀 ahora usamos el límite directamente
         self.create_widgets()
         self.populate_treeview()
         self.auto_refresh()
@@ -35,7 +33,12 @@ class ResultsApp:
         self.tree = create_treeview(frame, COLUMNS)
 
         # Botón editar
-        self.edit_btn = tb.Button(self.root, text="Editar Seleccionado", command=self.edit_selected, bootstyle="info")
+        self.edit_btn = tb.Button(
+            self.root, 
+            text="Editar Seleccionado", 
+            command=self.edit_selected, 
+            bootstyle="info"
+        )
         self.edit_btn.pack(pady=5)
 
     def populate_treeview(self):
@@ -43,7 +46,7 @@ class ResultsApp:
         selected_items = self.tree.selection()
         self.tree.delete(*self.tree.get_children())
 
-        for row in self.last_tests:
+        for row in self.raw_data:   
             unique_id = row.get("unique_id")
             meta_row = self.meta.get(unique_id, {})
             values = [
@@ -63,10 +66,12 @@ class ResultsApp:
             if iid in self.tree.get_children():
                 self.tree.selection_add(iid)
 
-        if bottom == 1.0:
-            self.tree.yview_moveto(1.0)
-        else:
-            self.tree.yview_moveto(top)
+        children = self.tree.get_children()
+        if children:
+            if top < 0.05:
+                self.tree.see(children[0])
+            else:
+                self.tree.yview_moveto(top)
 
     def edit_selected(self):
         selected = self.tree.selection()
@@ -74,16 +79,14 @@ class ResultsApp:
             Messagebox.show_error("Seleccione un test para editar", "Sin Selección", parent=self.root)
             return
         unique_id = selected[0]
-        # pasar test_id tambien
-        row = next((r for r in self.last_tests if r["unique_id"] == unique_id), None)
+        # Buscar fila en raw_data
+        row = next((r for r in self.raw_data if r["unique_id"] == unique_id), None)
         test_id = row.get("test_id") if row else ""
 
         open_edit_popup(self.root, unique_id, test_id, self.meta, self.populate_treeview)
 
-
     def auto_refresh(self):
-        self.raw_data = load_raw()
-        self.last_tests = self.raw_data[-DISPLAY_LAST:]
+        self.raw_data = load_raw(DISPLAY_LAST)  
         self.populate_treeview()
         self.root.after(5000, self.auto_refresh)
 
