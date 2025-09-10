@@ -2,10 +2,10 @@ import csv
 import os
 
 # Configuración general
-SERIAL_PORT = "COM3"     # Ajustar al puerto real   
+SERIAL_PORT = "COM5"     # Ajustar al puerto real   
 BAUDRATE = 9600
 DISPLAY_LAST = 100
-USE_SIMULATOR = True        # True = simulador, False = puerto real
+USE_SIMULATOR = False        # True = simulador, False = puerto real
 
 # Carpeta data relativa al proyecto
 BASE_DIR = os.path.dirname(__file__)  

@@ -1,7 +1,7 @@
 import serial
 import time
 import threading
-from config import SERIAL_PORT, BAUDRATE, RAW_CSV
+from config import SERIAL_PORT, BAUDRATE
 from file_manager import generate_unique_id, save_raw
 
 serial_status = "Desconectado"
