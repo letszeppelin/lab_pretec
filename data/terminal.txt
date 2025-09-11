@@ -1,0 +1,98 @@
+checkout : El término 'checkout' no se reconoce como nombre de un cmdlet, función, archivo de script o programa ejecutable. Compruebe si 
+escribió correctamente el nombre o, si incluyó una ruta de acceso, compruebe que dicha ruta es correcta e inténtelo de nuevo.
+En línea: 1 Carácter: 1
++ checkout sqlite_experimento
++ ~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (checkout:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> git checkout sqlite_experimento
+Switched to branch 'sqlite_experimento'
+Your branch is up to date with 'origin/sqlite_experimento'.
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> 
+ *  History restored 
+
+PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> .venv/Scripts/Activate.ps1
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> 
+ *  History restored 
+
+PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> 
+ *  History restored 
+
+PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> .venv/Scripts/Activate.ps1
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> python app.py
+Error inicializando puerto: could not open port 'COM5': FileNotFoundError(2, 'El sistema no puede encontrar el archivo especificado.', None, 2)
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> python serial_tester.py
+No se pudo abrir el puerto: could not open port 'COM5': FileNotFoundError(2, 'El sistema no puede encontrar el archivo especificado.', None, 2)
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> 
+ *  History restored 
+
+PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> 
+ *  History restored 
+
+PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec>
+ *  History restored 
+
+PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> .venv/Scripts/Activate.ps1
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> python app.py
+Escuchando puerto serial...
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> ^C
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> python app.py
+Escuchando puerto serial...
+$$C    0  414 ******* 11/09/25 14:34 20.00 150.00 150.00   0.00   0.00   0.00   22500.00  8.10 2400.00   0   11.250  1228.144    54.584 | too many values to unpack (expected 4)
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> python capture.py
+Esperando transmisión de ensayos archivados... (CTRL+C para salir)
+
+Finalizado por el usuario. Total bloques guardados: 0
+Todos los archivos guardados y puerto cerrado.
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> python serial_tester.p
+C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec\.venv\Scripts\python.exe: can't open file 'C:\\Users\\Usuario\\Documents\\JSanchez\\Varios\\Proyectos\\digitec\\serial_tester.p': [Errno 2] No such file or directory
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> python seral_tester.py
+C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec\.venv\Scripts\python.exe: can't open file 'C:\\Users\\Usuario\\Documents\\JSanchez\\Varios\\Proyectos\\digitec\\seral_tester.py': [Errno 2] No such file or directory
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> python serial_tester.py
+Escuchando en COM5 @ 9600 baud...
+03545-0909/09/202502] >>14:09:10 8.10     11.250  0        50.000        5.06.06100.00  20.00    8.10   2400.00   0       122.732          103557   09/09/2025      14:11:39          11.250           50.000        5.0    100.00  20.00    8.10   2400.00   0       116.607          103567   09/09/2025      14:14:13          11.250           50.000        5.0    100.00  20.00    8.10   2400.00   0       138.003          103571   09/09/2025      14:17:04          11.250           50.000        5.0    100.00  20.00    8.10   2400.00   0       134.221          103850   10/09/2025      09:24:33          11.250           50.000        5.0    100.00  20.00    8.10   2400.00   0       106.558          103867   10/09/2025      09:28:37          11.250           50.000        5.0    100.00  20.00    8.10   2400.00   0       114.772          103873   10/09/2025      09:32:31          11.250           50.000        5.0    100.00  20.00    8.10   2400.00   0       124.962          1IDMPRESIFechaILIHora)   Gradiente [MPa/s]       Carga inicio [kN]       Carga rotura [%]        Diametro [mm]   Temperatura [C] Peso [Kg]  Densidad [Kg/m3] Dias    Carga maxima [kN]       Resistencia maxima [Mpa]
+ID025-09Fecha4:4Hora] >>Gradiente [kN/s]        Carga inicio [kN]       Carga rotura [%]        Alto [mm]       Ancho [mm]      Rodillos inferior [mm]      Rodillos superior [mm]  Temperatura [C] Peso [Kg]       Densidad [Kg/m3]        Dias    Carga maxima [kN]       Resistencia maxima [Mpa]
+ID025-09Fecha4:4Hora] >>Gradiente [MPa/s]       Carga inicio [kN]       Carga rotura [%]        Alto [mm]       Ancho [mm]      Rodillos inferior [mm]      Rodillos superior [mm]  Temperatura [C] Peso [Kg]       Densidad [Kg/m3]        Dias    Carga maxima [kN]       Resistencia maxima [Mpa]
+ID025-09Fecha4:4Hora] >>Gradiente [kN/s]CTA (CUBCarga inicio [kN]       Carga rotura [%]        Longitud [mm]   Ancho [mm]      Factor  Temperatura [C]     Peso [Kg]       Densidad [Kg/m3]        Dias    Carga maxima [kN]       Resistencia maxima [Mpa]
+ID025-09Fecha4:4Hora] >>Gradiente [MPa/s]TA (CUBCarga inicio [kN]       Carga rotura [%]        Longitud [mm]   Ancho [mm]      Factor  Temperatura [C]     Peso [Kg]       Densidad [Kg/m3]        Dias    Carga maxima [kN]       Resistencia maxima [Mpa]
+ID025-09Fecha4:4Hora] >>Gradiente [kN/s](CILINDRCarga inicio [kN]       Carga rotura [%]        Diametro [mm]   Alto [mm]       Temperatura [C]     Peso [Kg]       Densidad [Kg/m3]        Dias    Carga maxima [kN]       Resistencia maxima [Mpa]
+ID025-09Fecha4:4Hora] >>Gradiente [MPa/s]CILINDRCarga inicio [kN]       Carga rotura [%]        Diametro [mm]   Alto [mm]       Temperatura [C]     Peso [Kg]       Densidad [Kg/m3]        Dias    Carga maxima [kN]       Resistencia maxima [Mpa]
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec\serial_tester.py", line 41, in <module>
+    serial_tester()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec\serial_tester.py", line 19, in serial_tester
+    raw = ser.readline()
+  File "C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec\.venv\Lib\site-packages\serial\serialwin32.py", line 288, in read      
+    result_ok = win32.GetOverlappedResult(
+        self._port_handle,
+        ctypes.byref(self._overlapped_read),
+        ctypes.byref(rc),
+        True)
+KeyboardInterrupt
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> python serial_tester.py
+Escuchando en COM5 @ 9600 baud...
+$$C    0  415 ******* 11/09/25 14:43 20.00 150.00 150.00   0.00   0.00   0.00   22500.00  8.10 2400.00   0   11.250  1245.257    55.345
+Traceback (most recent call last):
+  File "C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec\serial_tester.py", line 41, in <module>
+    serial_tester()
+    ~~~~~~~~~~~~~^^
+  File "C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec\serial_tester.py", line 19, in serial_tester
+    raw = ser.readline()
+  File "C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec\.venv\Lib\site-packages\serial\serialwin32.py", line 288, in read      
+    result_ok = win32.GetOverlappedResult(
+        self._port_handle,
+        ctypes.byref(self._overlapped_read),
+        ctypes.byref(rc),
+        True)
+KeyboardInterrupt
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> python capture.py
+Esperando transmisión de ensayos archivados... (CTRL+C para salir)
+
+Finalizado por el usuario. Total bloques guardados: 0
+Todos los archivos guardados y puerto cerrado.
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec> python app.py
+Escuchando puerto serial...
+$$C    0  416 ******* 11/09/25 14:50 20.00 150.00 150.00   0.00   0.00   0.00   22500.00  8.10 2400.00   0   11.250  1218.838    54.171 | too many values to unpack (expected 4)
+(.venv) PS C:\Users\Usuario\Documents\JSanchez\Varios\Proyectos\digitec>

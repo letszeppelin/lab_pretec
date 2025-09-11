@@ -73,15 +73,15 @@ def serial_listener():
                             pace = parts[10]; max_load = parts[11]; max_res = parts[12]
 
                     elif fmt == "2/3":
-                        temp = parts[6]
+                        temp = parts[7]
                         if parts[0].startswith("$$C"):
-                            length = parts[7]; width = parts[8]; area = parts[12]
-                            weight = parts[13]; density = parts[14]; curing = parts[15]
-                            pace = parts[16]; max_load = parts[17]; max_res = parts[18]
+                            length = parts[8]; width = parts[9]; area = parts[13]
+                            weight = parts[14]; density = parts[15]; curing = parts[16]
+                            pace = parts[17]; max_load = parts[18]; max_res = parts[19]
                         elif parts[0].startswith("$$F"):
-                            height = parts[6]; width = parts[7]; area = parts[12]
-                            weight = parts[13]; density = parts[14]; curing = parts[15]
-                            pace = parts[16]; max_load = parts[17]; max_res = parts[18]
+                            height = parts[7]; width = parts[8]; area = parts[13]
+                            weight = parts[14]; density = parts[15]; curing = parts[16]
+                            pace = parts[17]; max_load = parts[18]; max_res = parts[19]
                         elif parts[0].startswith("$$B"):
                             length = parts[7]; width = parts[8]; area = parts[12]
                             weight = parts[13]; density = parts[14]; curing = parts[15]
