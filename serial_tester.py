@@ -10,40 +10,32 @@ def serial_tester():
             bytesize=serial.EIGHTBITS,
             parity=serial.PARITY_NONE,
             stopbits=serial.STOPBITS_ONE,
-            timeout=0.1  # pequeño timeout para no bloquear
+            timeout=0.1
         )
 
         print(f"Escuchando en {SERIAL_PORT} @ {BAUDRATE} baud...")
 
-        buffer = b""  # acumulamos bytes recibidos
+        with open("raw_output1.txt", "ab") as f:  # binario, append
+            while True:
+                try:
+                    byte = ser.read(1)
+                    if not byte:
+                        continue
 
-        while True:
-            try:
-                byte = ser.read(1)
-                if not byte:
-                    continue  # no llegó nada en este ciclo
+                    # --- Guardar el byte crudo en archivo ---
+                    f.write(byte)
+                    f.flush()  # opcional, asegura que se escriba al instante
 
-                buffer += byte
-
-                # Fin de línea detectado
-                if byte in b"\r\n":
-                    # Decodificamos línea completa
+                    # --- Mostrar en pantalla (solo para debug) ---
                     try:
-                        line = buffer.decode("utf-8", errors="ignore").strip()
+                        ch = byte.decode("utf-8", errors="replace")
                     except Exception:
-                        line = str(buffer)
+                        ch = str(byte)
+                    print(repr(ch), end="")  # repr() para ver \r o \n explícito
 
-                    # Mostrar con timestamp
-                    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
-                    if line:  # ignorar líneas vacías
-                        print(f"[{line}")
-
-                    # Reiniciamos buffer
-                    buffer = b""
-
-            except Exception as e:
-                print("Error leyendo serial:", e)
-                time.sleep(0.1)
+                except Exception as e:
+                    print("Error leyendo serial:", e)
+                    time.sleep(0.1)
 
     except Exception as e:
         print("No se pudo abrir el puerto:", e)

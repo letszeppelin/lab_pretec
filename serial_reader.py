@@ -26,7 +26,7 @@ def serial_listener():
 
         while True:
             try:
-                line = ser.readline().decode(errors="ignore").strip()
+                line = ser.read_until(b'\r').decode("utf-8", errors="ignore").strip()
 
                 # Detectar silencio en el puerto
                 if not line:
@@ -44,8 +44,9 @@ def serial_listener():
                 if line.startswith("$ALL"):
                     serial_status = "Recibiendo"
                     parts = line.split()
-                    if len(parts) >= 4:
-                        _, load, t_elapsed, _ = parts
+                    if len(parts) >= 3:
+                        load = parts[1]
+                        t_elapsed = parts[2]
                         print(f"Status: {load} kN @ {t_elapsed} s")
                     continue
 
@@ -53,37 +54,56 @@ def serial_listener():
                     serial_status = "Recibiendo"
                     parts = line.split()
                     fmt = "2/3" if line.startswith("$$") else "1"
-                    test_id = parts[2]
-                    date = parts[3]
-                    time_ = parts[4]
 
                     # Inicializamos vacíos
+                    test_id = date = time_ = ""
                     temp = length = width = diam = height = area = ""
                     weight = density = curing = pace = max_load = max_res = ""
 
                     if fmt == "1":
+                        test_id = parts[2]; date = parts[3]; time = parts[4]
                         if parts[0].startswith("$C"):
-                            length = parts[5]; width = parts[6]; area = parts[9]
-                            pace = parts[10]; max_load = parts[11]; max_res = parts[12]
+                            length = parts[5]; width = parts[6]; diam = parts[9]; area = parts[10]
+                            pace = parts[11]; max_load = parts[12]; max_res = parts[13]
                         elif parts[0].startswith("$F"):
-                            height = parts[5]; width = parts[6]; area = parts[9]
-                            pace = parts[10]; max_load = parts[11]; max_res = parts[12]
+                            height = parts[5]; width = parts[6]; area = parts[10]
+                            pace = parts[11]; max_load = parts[12]; max_res = parts[13]
                         elif parts[0].startswith("$B"):
-                            length = parts[5]; width = parts[6]; area = parts[9]
-                            pace = parts[10]; max_load = parts[11]; max_res = parts[12]
+                            if parts[7] == "0" and parts[8] == "0" and parts[9] == "0":
+                                length = parts[5]
+                                width = parts[6]
+                                diam = ""
+                                height = ""
+                            elif parts[6] == "0" and parts[7] == "0" and parts[8] == "0":
+                                diam = parts[5]
+                                height = parts[9]
+                                length = ""
+                                width = ""
+                            area = parts[10]
+                            pace = parts[11]; max_load = parts[12]; max_res = parts[13]
 
                     elif fmt == "2/3":
-                        temp = parts[7]
+                        test_id =parts[2]; date =parts[4]; time = parts[5]; temp = parts[6]
                         if parts[0].startswith("$$C"):
-                            length = parts[8]; width = parts[9]; area = parts[13]
-                            weight = parts[14]; density = parts[15]; curing = parts[16]
-                            pace = parts[17]; max_load = parts[18]; max_res = parts[19]
+                            length = parts[7]; width = parts[8]; diam = parts[11]; area = parts[12]
+                            weight = parts[13]; density = parts[14]; curing = parts[15]
+                            pace = parts[16]; max_load = parts[17]; max_res = parts[18]
                         elif parts[0].startswith("$$F"):
-                            height = parts[7]; width = parts[8]; area = parts[13]
-                            weight = parts[14]; density = parts[15]; curing = parts[16]
-                            pace = parts[17]; max_load = parts[18]; max_res = parts[19]
+                            height = parts[7]; width = parts[8]; area = parts[12]
+                            weight = parts[13]; density = parts[14]; curing = parts[15]
+                            pace = parts[16]; max_load = parts[17]; max_res = parts[18]
                         elif parts[0].startswith("$$B"):
-                            length = parts[7]; width = parts[8]; area = parts[12]
+                            if parts[9] == "0" and parts[10] == "0" and parts[11] == "0":
+                                length = parts[7]
+                                width = parts[8]
+                                diam = ""
+                                height = ""
+                            elif parts[8] == "0" and parts[9] == "0" and parts[10] == "0":
+                                diam = parts[7]
+                                height = parts[11]
+                                length = ""
+                                width = ""
+                            area = parts[12]
                             weight = parts[13]; density = parts[14]; curing = parts[15]
                             pace = parts[16]; max_load = parts[17]; max_res = parts[18]
 
