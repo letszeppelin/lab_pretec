@@ -7,14 +7,14 @@ from gui.edit_popup import open_edit_popup
 import serial_reader  
 from ttkbootstrap.dialogs import Messagebox
 
-COLUMNS = ["ID","Fecha","Hora","Carga (kN)","Resistencia (MPa)","Nombre","Descripcion","Fecha de Moldeo","fck"]
+COLUMNS = ["ID", "Ensayo","Fecha","Hora","Carga (kN)","Resistencia (MPa)","Nombre","Descripcion","Fecha de Moldeo","fck"]
 
 class ResultsApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Resultados Máquina de Compresión")
         self.meta = load_meta()
-        self.raw_data = load_raw(DISPLAY_LAST)   # 🚀 ahora usamos el límite directamente
+        self.raw_data = load_raw(DISPLAY_LAST)   # ahora usamos el límite directamente
         self.create_widgets()
         self.populate_treeview()
         self.auto_refresh()
@@ -51,6 +51,7 @@ class ResultsApp:
             meta_row = self.meta.get(unique_id, {})
             values = [
                 row.get("test_id",""),
+                row.get("type",""),
                 row.get("date",""),
                 row.get("time",""),
                 row.get("max_load",""),

@@ -56,25 +56,32 @@ def serial_listener():
                     fmt = "2/3" if line.startswith("$$") else "1"
 
                     # Inicializamos vacíos
-                    test_id = date = time_ = ""
+                    test_id = date = time_ = type= ""
                     temp = length = width = diam = height = area = ""
                     weight = density = curing = pace = max_load = max_res = ""
 
                     if fmt == "1":
                         test_id = parts[2]; date = parts[3]; time = parts[4]
                         if parts[0].startswith("$C"):
+                            if parts[7] == "0" and parts[8] == "0" and parts[9] == "0":
+                                type = "Compresión (Cubo)"
+                            elif parts[6] == "0" and parts[7] == "0" and parts[8] == "0":
+                                type = "Compresión (Cilindro)"
                             length = parts[5]; width = parts[6]; diam = parts[9]; area = parts[10]
                             pace = parts[11]; max_load = parts[12]; max_res = parts[13]
                         elif parts[0].startswith("$F"):
+                            type = "Flexión"
                             height = parts[5]; width = parts[6]; area = parts[10]
                             pace = parts[11]; max_load = parts[12]; max_res = parts[13]
                         elif parts[0].startswith("$B"):
                             if parts[7] == "0" and parts[8] == "0" and parts[9] == "0":
+                                type = "Tracción (Cubo)"
                                 length = parts[5]
                                 width = parts[6]
                                 diam = ""
                                 height = ""
                             elif parts[6] == "0" and parts[7] == "0" and parts[8] == "0":
+                                type = "Tracción (Cilindro)"
                                 diam = parts[5]
                                 height = parts[9]
                                 length = ""
@@ -85,20 +92,27 @@ def serial_listener():
                     elif fmt == "2/3":
                         test_id =parts[2]; date =parts[4]; time = parts[5]; temp = parts[6]
                         if parts[0].startswith("$$C"):
+                            if parts[9] == "0" and parts[10] == "0" and parts[11] == "0":
+                                type = "Compresión (Cubo)"
+                            elif parts[7] == "0" and parts[8] == "0" and parts[9] == "0":
+                                type = "Compresión (Cilindro)"
                             length = parts[7]; width = parts[8]; diam = parts[11]; area = parts[12]
                             weight = parts[13]; density = parts[14]; curing = parts[15]
                             pace = parts[16]; max_load = parts[17]; max_res = parts[18]
                         elif parts[0].startswith("$$F"):
+                            type = "Flexión"
                             height = parts[7]; width = parts[8]; area = parts[12]
                             weight = parts[13]; density = parts[14]; curing = parts[15]
                             pace = parts[16]; max_load = parts[17]; max_res = parts[18]
                         elif parts[0].startswith("$$B"):
                             if parts[9] == "0" and parts[10] == "0" and parts[11] == "0":
+                                type = "Tracción (Cubo)"
                                 length = parts[7]
                                 width = parts[8]
                                 diam = ""
                                 height = ""
                             elif parts[8] == "0" and parts[9] == "0" and parts[10] == "0":
+                                type = "Tracción (Cilindro)"
                                 diam = parts[7]
                                 height = parts[11]
                                 length = ""
@@ -112,6 +126,7 @@ def serial_listener():
 
                     row = {
                         "unique_id": unique_id,
+                        "type": type,
                         "format": fmt,
                         "test_id": test_id,
                         "date": date,

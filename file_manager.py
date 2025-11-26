@@ -27,6 +27,7 @@ def init_db():
     c.execute("""
     CREATE TABLE IF NOT EXISTS raw_results (
         unique_id TEXT PRIMARY KEY,
+        type TEXT,
         format TEXT,
         test_id TEXT,
         date TEXT,
@@ -117,13 +118,13 @@ def save_raw(row):
     c = conn.cursor()
     c.execute("""
     INSERT INTO raw_results (
-        unique_id, format, test_id, date, time, temperature,
+        unique_id, type, format, test_id, date, time, temperature,
         length, width, diameter, height, area,
         weight, density, curing_days,
         pace_rate, max_load, max_resistance
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
-        row["unique_id"], row["format"], row["test_id"], row["date"], row["time"], row["temperature"],
+        row["unique_id"], row["type"], row["format"], row["test_id"], row["date"], row["time"], row["temperature"],
         row["length"], row["width"], row["diameter"], row["height"], row["area"],
         row["weight"], row["density"], row["curing_days"],
         row["pace_rate"], row["max_load"], row["max_resistance"]

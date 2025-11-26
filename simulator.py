@@ -17,6 +17,7 @@ def simulator_thread():
             time_str = time.strftime("%H:%M:%S", now)
 
             fmt = "2/3"
+            type = "Compresión (Cubo)"
             test_id = f"{test_counter:04d}"
             length = width = 150.0
             area = 22500.0
@@ -28,6 +29,7 @@ def simulator_thread():
 
             row = {
                 "unique_id": unique_id,
+                "type": type,
                 "format": fmt,
                 "test_id": test_id,
                 "date": date_str,
