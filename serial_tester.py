@@ -15,7 +15,7 @@ def serial_tester():
 
         print(f"Escuchando en {SERIAL_PORT} @ {BAUDRATE} baud...")
 
-        with open("datos_extraidos.txt", "ab") as f:  # binario, append
+        with open("datos.txt", "ab") as f:  # binario, append
             while True:
                 try:
                     byte = ser.read(1)
