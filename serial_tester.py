@@ -1,21 +1,26 @@
 import serial
 import time
+from datetime import datetime
 from config import SERIAL_PORT, BAUDRATE
 
 def serial_tester():
     try:
         ser = serial.Serial(
-            port=SERIAL_PORT,
-            baudrate=BAUDRATE,
-            bytesize=serial.EIGHTBITS,
-            parity=serial.PARITY_NONE,
-            stopbits=serial.STOPBITS_ONE,
+            port=SERIAL_PORT, # --- Si no reconoce el puerto, verificar en "adm de dispositivos" y corregir en config.py
+            baudrate=BAUDRATE, #--- No se cambia, está especificado en el manual
+            bytesize=serial.EIGHTBITS, #--- No se cambia, está especificado en el manual
+            parity=serial.PARITY_NONE, #--- No se cambia, está especificado en el manual
+            stopbits=serial.STOPBITS_ONE, #--- No se cambia, está especificado en el manual
             timeout=0.1
         )
 
         print(f"Escuchando en {SERIAL_PORT} @ {BAUDRATE} baud...")
 
-        with open("datos_extraidos.txt", "ab") as f:  # binario, append
+
+        today = datetime.now().strftime("%Y.%m.%d") #--- Extrae fecha de hoy, para usar en el nombre del archivo
+        filename = f"{today} - datos_extraidos.txt" # --- El nombre del archivo será igual a ej. "2025.11.24 - datos_extraidos.txt"
+
+        with open(filename, "ab") as f:
             while True:
                 try:
                     byte = ser.read(1)
@@ -24,7 +29,7 @@ def serial_tester():
 
                     # --- Guardar el byte crudo en archivo ---
                     f.write(byte)
-                    f.flush()  # opcional, asegura que se escriba al instante
+                    f.flush()  # asegura que se escriba al instante
 
                     # --- Mostrar en pantalla (solo para debug) ---
                     try:
