@@ -11,6 +11,9 @@ SILENCE_TIMEOUT = 5      # segundos sin datos → estado vuelve a "Escuchando"
 
 def serial_listener():
     global serial_status, _last_data_time
+
+    buffer = bytearray()
+
     try:
         ser = serial.Serial(
             port=SERIAL_PORT,
@@ -26,10 +29,11 @@ def serial_listener():
 
         while True:
             try:
-                line = ser.read_until(b'\r').decode("utf-8", errors="ignore").strip()
+
+                data = ser.read(256)
 
                 # Detectar silencio en el puerto
-                if not line:
+                if not data:
                     if (
                         serial_status == "Recibiendo"
                         and _last_data_time
@@ -38,8 +42,24 @@ def serial_listener():
                         serial_status = "Escuchando"
                     continue
 
+                buffer.extend(data)
+
+                while b'\r' in buffer:
+                    raw_line, _, buffer = buffer.partition(b'\r')
+
+                    try:
+                        line = raw_line.decode("utf-8", errors="ignore")
+                    except Exception:
+                        continue
+
+                    line = line.strip()
+                    if not line:
+                        continue
+
+
                 # Si llega línea nueva → se actualiza timestamp
                 _last_data_time = time.time()
+                serial_status = "Recibiendo"
 
                 if line.startswith("$ALL"):
                     serial_status = "Recibiendo"
@@ -61,7 +81,7 @@ def serial_listener():
                     weight = density = curing = pace = max_load = max_res = ""
 
                     if fmt == "1":
-                        test_id = parts[2]; date = parts[3]; time = parts[4]
+                        test_id = parts[2]; date = parts[3]; time_ = parts[4]
                         if parts[0].startswith("$C"):
                             if parts[7] == "0" and parts[8] == "0" and parts[9] == "0":
                                 type = "Compresión (Cubo)"
@@ -90,7 +110,7 @@ def serial_listener():
                             pace = parts[11]; max_load = parts[12]; max_res = parts[13]
 
                     elif fmt == "2/3":
-                        test_id =parts[2]; date =parts[4]; time = parts[5]; temp = parts[6]
+                        test_id =parts[2]; date =parts[4]; time_ = parts[5]; temp = parts[6]
                         if parts[0].startswith("$$C"):
                             if parts[9] == "0" and parts[10] == "0" and parts[11] == "0":
                                 type = "Compresión (Cubo)"
